@@ -211,6 +211,11 @@ jobs:
             go build -o build_assets/xray.exe -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=${COMMID} -s -w -buildid=" -v ./main
             # The line below is for without running conhost.exe version. Commented for not being used. Provided for reference.
             # go build -o build_assets/wxray.exe -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-H windowsgui -X github.com/xtls/xray-core/core.build=${COMMID} -s -w -buildid=" -v ./main
+          elif [[ ${GOOS} == 'darwin' ]]; then
+            # macOS: Keep UUID (remove -buildid=) for proper Local Network privacy tracking
+            # See: https://developer.apple.com/documentation/technotes/tn3178-checking-for-and-resolving-build-uuid-problems
+            echo 'Building Xray for macOS...'
+            go build -o build_assets/xray -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=${COMMID} -s -w" -v ./main
           else
             echo 'Building Xray...'
             if [[ ${GOARCH} == 'mips' || ${GOARCH} == 'mipsle' ]]; then
